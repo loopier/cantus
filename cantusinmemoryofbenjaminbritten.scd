@@ -47,7 +47,7 @@ s.waitForBoot({
 (
 // Given a note, return an array(2) of the note and its Tintinnabuli T1d (closest triad note below the current note)
 var tintinnabulifunc = {|note|
-	var octave = (i/7).asInt;
+	var octave = (note/7).asInt;
 	var tintinnabuli = switch(note.mod(7), // degree
 		0, {-3}, // root
 		1, {0},
