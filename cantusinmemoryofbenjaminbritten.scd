@@ -17,7 +17,7 @@ s.waitForBoot({
 		+ LFSaw.ar(freq/2, 0.5.rand, 0.6)
 		+ LFSaw.ar(freq*1.4983070768767, 0.5.rand, 0.3);
 		env = EnvGen.kr(Env.adsr(attack,decay, sustain, release), gate, doneAction:2);
-		sig = RLPF.ar(sig, env.range(filterfreq/2,filterfreq*2), 0.02, 0.5);
+		sig = RHPF.ar(sig, env.range(filterfreq/2,filterfreq*2), 0.02, 0.5);
 		sig = sig * amp;
 		sig = sig * env;
 		Out.ar(out, Pan2.ar(sig.sum, pan));
@@ -30,7 +30,7 @@ s.waitForBoot({
 		+ LFSaw.ar(freq/2, 0.5.rand, 0.6)
 		+ LFSaw.ar(freq*1.4983070768767, 0.5.rand, 0.3);
 		env = EnvGen.kr(Env.adsr(attack,decay, sustain, release), gate, doneAction:2);
-		sig = RLPF.ar(sig, filterfreq, env.range(0.9,0.7), 0.5);
+		sig = RLPF.ar(sig, filterfreq, 0.2, 0.5);
 		sig = sig * amp;
 		sig = sig * env;
 		Out.ar(out, Pan2.ar(sig, pan));
@@ -71,9 +71,7 @@ var melody = descendant_scale.pyramid(1); // [a, a, b, a, b, c, ...]
 var melody_tintinnabuli = melody.collect(tintinnabulifunc); // add Tintinnabuli to the melody
 
 // Melody for Violin #1: Down 2 octaves, ending on third degree of the 3rd octave down (A6 to C4)
-var melody1 = (melody_tintinnabuli.wrapExtend(
-	(melody_tintinnabuli.size*3)-2).collect(octavate_down)
-);
+var melody1 = Array.series((7*3)-1,7*3,-1).pyramid(1).collect(tintinnabulifunc);
 // Melody for Violin #2: Down 2 octaves, ending on root (A5 to A3)
 var melody2 = (melody_tintinnabuli.wrapExtend(melody_tintinnabuli.size*2)).collect(octavate_down);
 // Melody for Viola: Down 1 octave ending on the fifth degree of the 2nd octave down (A4 to E3) -- Voice without Tintinnabuli
@@ -97,48 +95,68 @@ var violin1 = Pbind(\instrument, \bruta, \root, root, \scale, Scale.minor, \lag,
 	\octave, 7,
 	\attack, 0.5,
 	\filterfreq, 600,
-	\amp, Pseq([0]++Array.series(melody1.size, 0.05, 0.2/melody1.size))/4,
-	\dur, Pseq([3]++dur1),
-	\degree, Pseq([0]++melody1)
+	\amp, Pseq(/*[0]++*/Array.series(dur1.size-1, 0.05, 0.2/(dur1.size-1))++[0.003])/4,
+	\dur, Pseq(/*[3]++*/dur1.put(dur1.size-1, 274.5)), // set longer dur for last note
+	\degree, Pseq(/*[0]++*/melody1)
 );
 var violin2 = Pbind(\instrument, \bruta, \root, root, \scale, Scale.minor, \lag, 0.1,
 	\octave, 6,
 	\pan, -0.5,
-	\attack, 0.5,
-	\amp, Pseq([0]++amp++[0.003])/6,
-	\dur, Pseq([6]++dur2),
-	\degree, Pseq([0]++melody2)
+	\attack, 1,
+	\release, 2,
+	\filterfreq, 600,
+	\amp, Pseq(/*[0]++*/Array.series(dur2.size-1, 0.05, 0.2/(dur2.size-1))++[0.003])/6,
+	\dur, Pseq(/*[6]++*/dur2.put(dur2.size-1, 324)*2),
+	\degree, Pseq(/*[0]++*/melody2)
 );
 var viola = Pbind(\instrument, \brutb, \root, root, \scale, Scale.minor, \lag, 0.1,
 	\octave, 5,
 	\pan, 0.5,
-	\attack, 0.5,
-	\amp, Pseq([0]++amp++[0.005])/6,
-	\dur, Pseq([12]++dur3),
-	\degree, Pseq([0]++melody3)
+	\attack, 2,
+	\release, 4,
+	\amp, Pseq(/*[0]++*/Array.series(dur3.size-1, 0.05, 0.2/(dur3.size-1))++[0.005])/6,
+	\dur, Pseq(/*[12]++*/dur3.put(dur3.size-1,228)*4),
+	\degree, Pseq(/*[0]++*/melody3)
 );
 var cello = Pbind(\instrument, \brutb, \root, root, \scale, Scale.minor, \lag, 0.1,
 	\octave, 4,
-	\attack, 0.5,
+	\attack, 4,
+	\release, 8,
 	\filterfreq, 400,
 	\scale, Scale.minor,
-	\amp, Pseq([0]++amp++[0.005])/6,
-	\dur, Pseq([18]++dur4),
-	\degree, Pseq([0]++melody4)
+	\amp, Pseq(/*[0]++*/Array.series(dur4.size-1, 0.05, 0.2/(dur4.size-1))++[0.005])/6,
+	\dur, Pseq(/*[18]++*/dur4.put(dur4.size-1,216)*8),
+	\degree, Pseq(/*[0]++*/melody4)
 );
 var bass = Pbind(\instrument, \brutb, \root, root, \scale, Scale.minor, \lag, 0.1,
 	\octave, 3,
-	\attack, 0.5,
-	\filterfreq, 200,
+	\attack, 8,
+	\release, 16,
+	\filterfreq, 600,
 	\scale, Scale.minor,
-	\amp, Pseq([0]++amp++[0.005])/6,
-	\dur, Pseq([24]++dur5),
-	\degree, Pseq([0]++melody5)
+	\amp, Pseq(/*[0]++*/Array.series(dur5.size-1, 0.05, 0.2/(dur5.size-1))++[0.005])/6,
+	\dur, Pseq(dur5*16),//Pseq(/*[24]++*/(dur5.put(dur5.size-1,8))*16)/4,
+	\degree, Pseq(/*[0]++*/melody5)
 );
 
-Ppar(
+/*Ppar(
 	[violin1, violin2, viola, cello, bass],
-	// [violin2],
+	// [violin1],
 	1
-).play;
+).play;*/
+
+Pspawner({|sp|
+	sp.wait(1.5);
+	sp.par(violin1);
+	sp.wait(1.5);
+	sp.par(violin2);
+	sp.wait(6);
+	sp.par(viola);
+	sp.wait(12);
+	sp.par(cello);
+	sp.wait(24);
+	sp.par(bass);
+	/*sp.wait(1.6);
+	sp.suspendAll;*/
+}).play;
 )
