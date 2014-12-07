@@ -91,21 +91,21 @@ var dur5 = Array.fill(melody5.size, {|i| (i.mod(2)+1)/2;}).reverse;
 
 var amp = Array.series(melody.size, 0.05, 0.2/melody.size); // alternate [1,1/2]
 var root = -3;
-var violin1 = Pbind(\instrument, \bruta, \root, root, \scale, Scale.minor, \lag, 0.1,
+var violin1 = Pbind(\instrument, \brutb, \root, root, \scale, Scale.minor, \lag, 0.1,
 	\octave, 7,
 	\attack, 0.5,
-	\filterfreq, 600,
-	\amp, Pseq(/*[0]++*/Array.series(dur1.size-1, 0.05, 0.2/(dur1.size-1))++[0.003])/4,
+	\filterfreq, 8600,
+	\amp, Pseq(/*[0]++*/Array.series(dur1.size-1, 0.05, 0.2/(dur1.size-1))++[0.0015])/4,
 	\dur, Pseq(/*[3]++*/dur1.put(dur1.size-1, 274.5)), // set longer dur for last note
 	\degree, Pseq(/*[0]++*/melody1)
 );
-var violin2 = Pbind(\instrument, \bruta, \root, root, \scale, Scale.minor, \lag, 0.1,
+var violin2 = Pbind(\instrument, \brutb, \root, root, \scale, Scale.minor, \lag, 0.1,
 	\octave, 6,
 	\pan, -0.5,
 	\attack, 1,
 	\release, 2,
 	\filterfreq, 600,
-	\amp, Pseq(/*[0]++*/Array.series(dur2.size-1, 0.05, 0.2/(dur2.size-1))++[0.003])/6,
+	\amp, Pseq(/*[0]++*/Array.series(dur2.size-1, 0.05, 0.2/(dur2.size-1))++[0.0015])/6,
 	\dur, Pseq(/*[6]++*/dur2.put(dur2.size-1, 324)*2),
 	\degree, Pseq(/*[0]++*/melody2)
 );
@@ -114,7 +114,7 @@ var viola = Pbind(\instrument, \brutb, \root, root, \scale, Scale.minor, \lag, 0
 	\pan, 0.5,
 	\attack, 2,
 	\release, 4,
-	\amp, Pseq(/*[0]++*/Array.series(dur3.size-1, 0.05, 0.2/(dur3.size-1))++[0.005])/6,
+	\amp, Pseq(/*[0]++*/Array.series(dur3.size-1, 0.05, 0.2/(dur3.size-1))++[0.003])/6,
 	\dur, Pseq(/*[12]++*/dur3.put(dur3.size-1,228)*4),
 	\degree, Pseq(/*[0]++*/melody3)
 );
@@ -124,7 +124,7 @@ var cello = Pbind(\instrument, \brutb, \root, root, \scale, Scale.minor, \lag, 0
 	\release, 8,
 	\filterfreq, 400,
 	\scale, Scale.minor,
-	\amp, Pseq(/*[0]++*/Array.series(dur4.size-1, 0.05, 0.2/(dur4.size-1))++[0.005])/6,
+	\amp, Pseq(/*[0]++*/Array.series(dur4.size-1, 0.05, 0.2/(dur4.size-1))++[0.003])/12,
 	\dur, Pseq(/*[18]++*/dur4.put(dur4.size-1,216)*8),
 	\degree, Pseq(/*[0]++*/melody4)
 );
@@ -134,7 +134,7 @@ var bass = Pbind(\instrument, \brutb, \root, root, \scale, Scale.minor, \lag, 0.
 	\release, 16,
 	\filterfreq, 600,
 	\scale, Scale.minor,
-	\amp, Pseq(/*[0]++*/Array.series(dur5.size-1, 0.05, 0.2/(dur5.size-1))++[0.005])/6,
+	\amp, Pseq(/*[0]++*/Array.series(dur5.size-1, 0.05, 0.2/(dur5.size-1))++[0.0015])/6,
 	\dur, Pseq(dur5*16),//Pseq(/*[24]++*/(dur5.put(dur5.size-1,8))*16)/4,
 	\degree, Pseq(/*[0]++*/melody5)
 );
